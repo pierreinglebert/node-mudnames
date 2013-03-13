@@ -1,0 +1,18 @@
+{
+  "name": "mudnames",
+  "version": "0.0.1",
+  "description": "Mudnames can generate random names for characters, cities or whatever used in role playing games.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nemeria/node-mudnames.git"
+  },
+  "keywords": [
+    "mudnames"
+  ],
+  "author": "Pierre Inglebert <pierre.inglebert@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {},
+  "gitHead": "fdfee53b8cc84f3e85d2675b17bbe344c034a49b",
+  "main": "index.js"
+}
