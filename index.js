@@ -442,3 +442,7 @@ Mudnames.get_file_list = function() {
     return Object.keys(Mudnames.getInstance()._dictionnaries.get_dictionnaries_list());
 };
 
+exports.get_file_list = Mudnames.get_file_list;
+exports.generate_name_from = Mudnames.generate_name_from;
+exports.generates_several_names = Mudnames.generates_several_names;
+
