@@ -263,7 +263,7 @@ function Mudnames_Dictionnaries(directory) {
     };
 
     if (!directory) {
-        directory = process.cwd() + '/mudnames/data/';
+        directory = __dirname + '/data/';
     }
 
     var stats = fs.lstatSync(directory);
