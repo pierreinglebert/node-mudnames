@@ -1,6 +1,6 @@
 {
   "name": "mudnames",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Mudnames can generate random names for characters, cities or whatever used in role playing games.",
   "repository": {
     "type": "git",
