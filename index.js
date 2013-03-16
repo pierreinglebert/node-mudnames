@@ -39,7 +39,7 @@ function Mudnames_Dictionnary(filename) {
     /**
      * Capabilities if forced.
      */
-    this.forced_capability = [];
+    this.forced_capability = null;
 
     /**
      * File's particles list.
@@ -150,7 +150,9 @@ Mudnames_Dictionnary.prototype.force_capability = function(cap) {
  */
 Mudnames_Dictionnary.prototype.select_capability = function() {
 
-    this.check_cap_file();
+    if(this.forced_capability === null) {
+        this.check_cap_file();
+    }
 
     // If a forced capability exists, we apply it.
     if (this.forced_capability.length > 0) {
@@ -190,6 +192,7 @@ Mudnames_Dictionnary.prototype.select_capability = function() {
  */
 Mudnames_Dictionnary.prototype.check_cap_file = function() {
     // Non-lethal error here. If we can't open it, we leave it alone.
+    this.forced_capability = [];
     if (fs.existsSync(this.filename + '.cap')) {
         this.forced_cap = true;
         var self = this;
@@ -205,8 +208,6 @@ Mudnames_Dictionnary.prototype.check_cap_file = function() {
         return false;
     }
 };
-
-
 
 /**
  * Sors une partie de nom aléatoire selon le tag et le fichier associé.
@@ -227,8 +228,6 @@ Mudnames_Dictionnary.prototype.random_particle_from = function(particle) {
         if(this.file_particles[particle][randomId]) 
             break;
     } while(1);
-
-    //this.debug.particles_used[particle] = this.file_particles[particle][randomId];
 
     return this.file_particles[particle][randomId];
 };
@@ -273,7 +272,6 @@ function Mudnames_Dictionnaries(directory) {
     }
 
     this._directory = directory;
-
     var files = fs.readdirSync(this._directory);
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
@@ -303,10 +301,7 @@ Mudnames_Dictionnaries.prototype.open_dictionnary = function(name) {
     if (!name) {
         name = 'random';
     }
-    if (this.opened_dictionnary(name)) {
-        return this._dictionnaries_instance[name];
-    }
-
+    
     switch (name) {
     case '':
     case 'random':
@@ -318,6 +313,11 @@ Mudnames_Dictionnaries.prototype.open_dictionnary = function(name) {
             throw new Error("Dictionnary '" + name + "' doesn't exists.");
         }
     }
+    
+    if (this.opened_dictionnary(name)) {
+        return this._dictionnaries_instance[name];
+    }
+
     this._dictionnaries_instance[name] = new Mudnames_Dictionnary(this._dictionnaries[name]);
     
     this._actions.dictionnaries[name] = {};
