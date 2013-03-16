@@ -41,6 +41,15 @@ mudnames.get_file_list(dict);
 mudnames.generates_several_names(10, 'random');
 ```
 
+## Benchmark against PHP version from xrogaan
+
+The scripts were executed 20 times each and i kept the average on a ubuntu64 core2@3.4Ghz
+
+Generation of 200 000 random names from dicts in the repo directory.
+NodeJS : 1.164 sec
+PHP : 182.379 sec
+PHP (corrected script) : 6.302 sec
+
 
 ## License
 
