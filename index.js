@@ -281,8 +281,6 @@ function Mudnames_Dictionnaries(directory) {
             this._dictionnaries[file] = this._directory + file;
         }
     }
-
-    //    ksort($this->_dictionnaries);
 }
 
 /**
@@ -316,7 +314,7 @@ Mudnames_Dictionnaries.prototype.open_dictionnary = function(name) {
         name = keys[Math.floor((Math.random() * (keys.length - 1)))];
         break;
     default:
-        if (this.dictionnary_exists(name)) {
+        if (!this.dictionnary_exists(name)) {
             throw new Error("Dictionnary '" + name + "' doesn't exists.");
         }
     }
@@ -390,13 +388,45 @@ Mudnames_Dictionnaries.prototype.get_file_informations = function(file) {
 };
 
 
-function Mudnames(config) {
+function Mudnames(directory) {
     this._dictionnaries = [];
     this.latest_name = '';
     this.latest_file = '';
      
-    this._dictionnaries = new Mudnames_Dictionnaries(config);
+    this._dictionnaries = new Mudnames_Dictionnaries(directory);
 }
+
+Mudnames.prototype.generate_name_from = function(file) {
+    var dictionnary = this._dictionnaries.open_dictionnary(file);
+    this.latest_file = dictionnary.filename;
+    this.latest_name = this._dictionnaries.get_name(dictionnary.dictionnary_name);
+    return this.latest_name;
+};
+
+Mudnames.prototype.generates_several_names = function(number, file) {
+    var names = [];
+    while(number-- > 0) {
+        names.push(this.generate_name_from(file));
+    }
+    return names;
+};
+
+
+Mudnames.prototype.get_file_list = function() {
+    return Object.keys(this._dictionnaries.get_dictionnaries_list());
+};
+
+Mudnames.prototype.get_info = function(key, file) {
+    if(!file) {
+        file = this.latest_file;
+    }
+    var info = this._dictionnaries.get_file_informations(file);
+    if(!info || !info[key]) {
+        return false;
+    }
+    return info[key];
+};
+
 
 Mudnames.getInstance = function(config, auto_create) {
     if(auto_create === undefined) auto_create = true;
@@ -405,43 +435,26 @@ Mudnames.getInstance = function(config, auto_create) {
     }
     return Mudnames._instance;
 };
-    
 
-Mudnames.generate_name_from = function(file) {
-    var mudnames = Mudnames.getInstance();
-    var dictionnary = mudnames._dictionnaries.open_dictionnary(file);
-    mudnames.latest_file = dictionnary.filename;
-    mudnames.latest_name = mudnames._dictionnaries.get_name(dictionnary.dictionnary_name);
-    return mudnames.latest_name;
-};
-
-Mudnames.generates_several_names = function(number, file) {
-    var names = [];
-    while(number-- > 0) {
-        names.push(Mudnames.generate_name_from(file));
-    }
-    return names;
-};
-
-Mudnames.get_info = function(key, file) {
-    var mudnames = Mudnames.getInstance();   
-    if(!file) {
-        file = mudnames.latest_file;
-    }
-    var info = mudnames._dictionnaries.get_file_informations(file);
-    if(!info[key]) {
-        return false;
-    }
-    return info[key];
-};
-
-/**
- * Return an array of all the dictionnaries files
- */
 Mudnames.get_file_list = function() {
     return Object.keys(Mudnames.getInstance()._dictionnaries.get_dictionnaries_list());
 };
 
+Mudnames.generate_name_from = function(file) {
+    return Mudnames.getInstance().generate_name_from(file);
+};
+
+Mudnames.generates_several_names = function(number, file) {
+    return Mudnames.getInstance().generates_several_names(number, file);
+};
+
+Mudnames.get_info = function(key, file) {
+    return Mudnames.getInstance().get_info(key, file);
+};
+
+exports.Generator = Mudnames;
+
+exports.get_info = Mudnames.get_info;
 exports.get_file_list = Mudnames.get_file_list;
 exports.generate_name_from = Mudnames.generate_name_from;
 exports.generates_several_names = Mudnames.generates_several_names;
