@@ -5,6 +5,11 @@ Mudnames for NodeJS
 
 For the moment all the functions are synchronous, it will change soon (so the API).
 
+[![Build Status](https://secure.travis-ci.org/pierreinglebert/node-mudnames.png)](http://travis-ci.org/pierreinglebert/node-mudnames)
+[![Coverage Status](https://coveralls.io/repos/pierreinglebert/node-mudnames/badge.png?branch=master)](https://coveralls.io/r/pierreinglebert/node-mudnames?branch=master)
+[![Dependency Status](https://gemnasium.com/pierreinglebert/node-mudnames.png)](https://gemnasium.com/pierreinglebert/node-mudnames)
+
+
 ## Usage
 
 You can simply use it with the embedded dictionnaries in the `./data` directory
