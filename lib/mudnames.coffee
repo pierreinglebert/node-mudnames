@@ -1,4 +1,4 @@
-Dictionnaries = require "./Dictionnaries"
+Dictionnaries = require "./dictionnaries"
 
 class Mudnames
   constructor: (directory) ->
@@ -27,9 +27,7 @@ class Mudnames
     return false  if not info or not info[key]
     info[key]
 
-
-Mudnames.getInstance = (config, auto_create) ->
-  auto_create = true  if auto_create is `undefined`
+Mudnames.getInstance = (config, auto_create = true) ->
   Mudnames._instance = new Mudnames()  if auto_create and not Mudnames._instance
   Mudnames._instance
 

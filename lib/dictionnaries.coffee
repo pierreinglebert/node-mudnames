@@ -1,11 +1,12 @@
 fs = require "fs"
-Dictionnary = require "./Dictionnary"
+path = require "path"
+Dictionnary = require "./dictionnary"
 
 ###
 Build a list of files as dictionnaries list.
 @param string directory directory where the dictionnaries can be found
 ###
-class Mudnames_Dictionnaries
+class Dictionnaries
   constructor: (directory) ->
     @_directory = null
     @_dictionnaries = []
@@ -13,7 +14,7 @@ class Mudnames_Dictionnaries
     @_caplist = ["PS", "PMS", "PM", "N", "X", "NA", "XA", "NX"]
     @_actions = dictionnaries: {}
 
-    directory = __dirname + "/data/"  unless directory
+    directory = __dirname + path.sep + ".." + path.sep + "data" + path.sep  unless directory
     stats = fs.lstatSync(directory)
     
     # Yes it is
@@ -91,7 +92,7 @@ class Mudnames_Dictionnaries
     @_dictionnaries
 
   get_name_informations: (dico, name) ->
-    if @_action.dictionnaries and @_action.dictionnaries[dico] and @_action.dictionnaries[dico].generated and @_action.dictionnaries[dico].generated[name]
+    if @_action.dictionnaries[dico].generated[name]?
       @_action.dictionnaries[dico].generated[name]
     else
       false

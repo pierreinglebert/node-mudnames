@@ -1,7 +1,7 @@
 fs = require "fs"
 path = require "path"
 
-class Mudnames_Dictionnary
+class Dictionnary
   constructor: (filename) ->
     ###
     Name's Particles
@@ -152,7 +152,7 @@ class Mudnames_Dictionnary
   Sors une partie de nom aléatoire selon le tag et le fichier associé.
   ###
   random_particle_from: (particle) ->
-    new Error(@filename + ":load_random_particle: Unknow particle ' " + particle + " '")  unless @file_particles[particle]
+    new Error(@filename + ":load_random_particle: Unknow particle '" + particle + "'") unless @file_particles[particle]
     return ""  if @file_particles[particle].length is 0
     randomId = 0
     loop
