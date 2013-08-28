@@ -1,6 +1,18 @@
 Dictionnaries = require "./dictionnaries"
 
+
 class Mudnames
+
+
+
+Mudnames.instances = {}
+
+module.exports.getList = (folder, cb) ->
+  @dictionnaries  = new Dictionnaries
+
+#pathName = __dirname + path.sep + ".." + path.sep + "data" + path.sep  unless directory
+
+###
   constructor: (directory) ->
     @_dictionnaries = []
     @latest_name = ""
@@ -43,4 +55,4 @@ Mudnames.generates_several_names = (number, file) ->
 Mudnames.get_info = (key, file) ->
   Mudnames.getInstance().get_info key, file
 
-module.exports = Mudnames
+###
