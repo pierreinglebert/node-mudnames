@@ -53,6 +53,16 @@ describe('mudname generate one name', () ->
       done()
     )
   )
+  it('should have cached the dictionary and generate random name', (done) ->
+    mudnames = Require("../lib/mudnames")()
+    mudnames.generateOne('alver-1', (name) ->
+      mudnames.generateOne('alver-1', (name) ->
+        assert.typeOf name, "String"
+        assert.isTrue name.length > 0
+        done()
+      )
+    )
+  )
   it('should generate 4 names randomly', (done) ->
     mudnames = Require("../lib/mudnames")()
     mudnames.generate('random', 4, (names) ->

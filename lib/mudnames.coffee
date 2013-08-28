@@ -17,6 +17,7 @@ class Mudnames extends EventEmitter
     if @dictionnaries?
       cb @dictionnaries
     @once('dictionnaries', (dict) ->
+      @dictionnaries = dict
       cb(dict)
     )
 

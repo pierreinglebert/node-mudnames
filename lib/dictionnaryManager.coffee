@@ -13,7 +13,7 @@ module.exports = DictionnaryManager =
         cb err
       else
         unless stats.isDirectory()
-          cb new Error("Directory " + directory + " doesn't exists or is not a directory")
+          cb new Error("Directory " + pathName + " doesn't exists or is not a directory")
         else
           #Load each dictionnary now
           files = fs.readdir(pathName, (err, files) ->
