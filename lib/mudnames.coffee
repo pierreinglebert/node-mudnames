@@ -1,58 +1,63 @@
-Dictionnaries = require "./dictionnaries"
+path = require "path"
+EventEmitter = require('events').EventEmitter
+DictionnaryManager = require "./dictionnaryManager"
+async = require "async"
 
+class Mudnames extends EventEmitter
+  constructor: (options = {}) ->
+    options.path = options.path or __dirname + path.sep + ".." + path.sep + "data"
+    self = this
+    DictionnaryManager.loadDictionnaries(options.path, (err, dictionnaries) ->
+      throw err if err
+      @dictionnaries = dictionnaries
+      self.emit 'dictionnaries', dictionnaries
+    )
 
-class Mudnames
+  getList: (cb) ->
+    if @dictionnaries?
+      cb @dictionnaries
+    @once('dictionnaries', (dict) ->
+      cb(dict)
+    )
 
+  generate: (dictionnaryName, number, cb) ->
+    self = this
+    async.times number, ((n, next) ->
+      self.generateOne dictionnaryName, (name) ->
+        next null, name
+    ), (err, names) ->
+      cb names
 
+  generateOne: (dictionnaryName, cb) ->
+    #console.log dictionnaryName
+    #console.log cb
+    @getList (dictionnaries) ->
+      if dictionnaryName == "random"
+        keys = Object.keys(dictionnaries)
+        dictionnaryName = keys[Math.floor((Math.random() * (keys.length - 1)))]
 
-Mudnames.instances = {}
+      current_cap = dictionnaries[dictionnaryName].select_capability()
+      capability = "NN"
+      switch current_cap
+        when "N"
+          capability = "NN"
+        when "X"
+          capability = "XX"
+        when "XA"
+          capability = "N" + ((if Math.round(Math.random()) then "A" else "X"))
+        when "NX"
+          capability = ((if Math.round(Math.random()) then "N" else "A")) + "A"
+        else
+          capability = current_cap
+      name = ""
+      particle = ""
 
-module.exports.getList = (folder, cb) ->
-  @dictionnaries  = new Dictionnaries
+      for capa in capability
+        particle = dictionnaries[dictionnaryName].plite2full(capa)
+        name += dictionnaries[dictionnaryName].random_particle_from(particle)
+      
+      name = name.charAt(0).toUpperCase() + name.substr(1)
+      cb name
 
-#pathName = __dirname + path.sep + ".." + path.sep + "data" + path.sep  unless directory
-
-###
-  constructor: (directory) ->
-    @_dictionnaries = []
-    @latest_name = ""
-    @latest_file = ""
-    @_dictionnaries = new Dictionnaries(directory)
-
-  generate_name_from = (file) ->
-    dictionnary = @_dictionnaries.open_dictionnary(file)
-    @latest_file = dictionnary.filename
-    @latest_name = @_dictionnaries.get_name(dictionnary.dictionnary_name)
-    @latest_name
-
-  generates_several_names = (number, file) ->
-    names = []
-    names.push @generate_name_from(file)  while number-- > 0
-    names
-
-  get_file_list = ->
-    Object.keys @_dictionnaries.get_dictionnaries_list()
-
-  get_info = (key, file) ->
-    file = @latest_file  unless file
-    info = @_dictionnaries.get_file_informations(file)
-    return false  if not info or not info[key]
-    info[key]
-
-Mudnames.getInstance = (config, auto_create = true) ->
-  Mudnames._instance = new Mudnames()  if auto_create and not Mudnames._instance
-  Mudnames._instance
-
-Mudnames.get_file_list = ->
-  Object.keys Mudnames.getInstance()._dictionnaries.get_dictionnaries_list()
-
-Mudnames.generate_name_from = (file) ->
-  Mudnames.getInstance().generate_name_from file
-
-Mudnames.generates_several_names = (number, file) ->
-  Mudnames.getInstance().generates_several_names number, file
-
-Mudnames.get_info = (key, file) ->
-  Mudnames.getInstance().get_info key, file
-
-###
+module.exports = (options) ->
+  new Mudnames options

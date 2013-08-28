@@ -41,11 +41,13 @@ class Dictionnary
       line = line.trim()
       if line.match(/^#/g)
         currentPart = line.replace(/^#/g, "")
-        if self._particle[currentPart]
+        if self.particle[currentPart]
           self.file_particles[currentPart] = []
         else
           throw new Error(self.filename + " Unknow particle '" + currentPart + "'")
-      else self.file_particles[currentPart].push line  if line.length > 1 and not line.match(/-----/g)
+      else
+        if self.file_particles[currentPart]?
+          self.file_particles[currentPart].push line  if line.length > 1 and not line.match(/-----/g)
 
     @set_capabilities()
 
@@ -53,14 +55,14 @@ class Dictionnary
   Return tag's short version
   ###
   pfull2lite: (par) ->
-    @_particle[par]
+    @particle[par]
 
   ###
   Return tag's long version
   ###
   plite2full: (par) ->
-    for i of @_particle
-      return i  if @_particle[i] is par
+    for i of @particle
+      return i  if @particle[i] is par
     null
 
   set_capabilities: ->
@@ -68,7 +70,7 @@ class Dictionnary
     check_particle = []
     keys = Object.keys(@file_particles)
     
-    for key in keys
+    for key, i in keys
       check_particle[i] = @pfull2lite(key)
     
     if check_particle.indexOf("P") isnt -1 and check_particle.indexOf("S") isnt -1
